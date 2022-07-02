@@ -3,6 +3,8 @@ import latex
 import horoscope
 import catto
 
+CHANNEL_ID = 992771006403985429
+
 client = discord.Client()
 token = open("token.txt", "r").read()
 
@@ -22,8 +24,9 @@ async def on_message(message):
             await message.channel.send(horoscope.fetch(message.content.replace("!horoszkop ", "")))
         except Exception:
             await message.channel.send("Nem létező horoszkóp!")
+
     elif message.content.startswith("!horoszkop") and not message.channel.id == CHANNEL_ID:
-        await message.channel.send(f"Kérlek használd a megfelelő csatornát: <#CHANNEL_ID> :)")
+        await message.channel.send(f"Kérlek használd a megfelelő csatornát: <#{CHANNEL_ID}> :)")
     
     elif message.content.startswith("!latex"):
         latex.save_image_from_latex(message.content.replace("!latex", ""))
