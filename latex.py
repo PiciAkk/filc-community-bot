@@ -2,6 +2,9 @@ import urllib.parse
 import requests
 
 def save_image_from_latex(latex):
+    if latex == "":
+        raise Exception("Empty input!")
+
     compiled_image = open("compiled_latex.png", "wb+")
     encoded = urllib.parse.quote(latex)
 

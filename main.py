@@ -29,11 +29,17 @@ async def on_message(message):
         await message.channel.send(f"Kérlek használd a megfelelő csatornát: <#{CHANNEL_ID}> :)")
     
     elif message.content.startswith("!latex"):
-        latex.save_image_from_latex(message.content.replace("!latex", ""))
-        await message.channel.send(file=discord.File("compiled_latex.png"))
+        try:
+            latex.save_image_from_latex(message.content.replace("!latex", ""))
+            await message.channel.send(file=discord.File("compiled_latex.png"))
+        except Exception:
+            await message.channel.send("Érvénytelen LaTeX!")
     
     elif message.content.startswith("!cat"):
         catto.fetch(message.content.replace("!cat ", ""))
         await message.channel.send(file=discord.File("cat.gif"))
+
+    elif message.content == "!gamer":
+        await message.author.add_roles(discord.utils.get(message.guild.roles, name="gaymer"))
 
 client.run(token)
