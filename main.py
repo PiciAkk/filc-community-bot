@@ -1,17 +1,38 @@
 import discord
+from discord import Intents, app_commands
 import latex
 import horoscope
 import catto
 
-HOROSCOPE_CHANNEL_ID = 992728004373524520 #992771006403985429
 
-client = discord.Client()
+CHANNEL_ID = #töltsd ki
+MyGuild = discord.Object(id=0) #töltsd ki
+class aclient(discord.Client):
+    def __init__(self, *, intents: Intents):
+        super().__init__(intents=intents)
+        self.tree = app_commands.CommandTree(self)
+    
+    async def setup_hook(self):
+        self.tree.copy_global_to(guild=MyGuild)
+        await self.tree.sync(guild=MyGuild)
+
+
+intents = Intents.all()
+intents.members = True
+intents.message_content = True
+
+
+client = aclient(intents=intents)
 token = open("token.txt", "r").read()
 
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+
+@client.tree.command()
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Hello, {interaction.user.mention}")
 
 
 @client.event
