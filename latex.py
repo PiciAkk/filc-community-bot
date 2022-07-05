@@ -1,9 +1,12 @@
 import urllib.parse
 import requests
+import case_sensitive
 
 def save_image_from_latex(latex):
     if latex == "":
         raise Exception("Empty input!")
+    
+    latex = case_sensitive.transform(["!latex","! latex"], latex)
 
     compiled_image = open("images/compiled_latex.png", "wb+")
     encoded = urllib.parse.quote(latex)
