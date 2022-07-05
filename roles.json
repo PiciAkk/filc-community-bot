@@ -1,0 +1,14 @@
+[
+    {
+        "role": "gamer",
+        "name": "Gamer",
+        "emoji": "🎮",
+        "description": "Ha gamernek érzed magad, emiatt pedig szeretnél játékokkal kapcsolatos híreket kapni, válaszd ezt a lehetőséget (is)."
+    },
+    {
+        "role": "filmklubos",
+        "name": "Filmklubos",
+        "emoji": "🎥",
+        "description": "Ha szeretnél az általában hétvégénként megrendezett filmklubbal kapcsolatos hírekről értesülni (és azon esetleg részt venni), ez a rang való neked."
+    }
+]

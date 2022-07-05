@@ -2,7 +2,7 @@ import requests
 import json
 
 def fetch(catto):
-    image = open("cat.gif", "wb+")
+    image = open("images/cat.gif", "wb+")
     if len(catto) <= 3:
         image.write(requests.get(f"https://http.cat/{catto}").content)
     elif len(catto) > 3 and catto == "random":
