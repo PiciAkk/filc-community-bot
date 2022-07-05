@@ -15,8 +15,11 @@ async def rossz_csatorna(aktualis_csatorna, jo_csatorna):
 
 def rangok():
     rangok_fajl = open("roles.json", "r")
+    tartalom = rangok_fajl.read()
+    
+    rangok_fajl.close()
 
-    return json.loads(rangok_fajl.read())
+    return json.loads(tartalom)
 
 @client.event
 async def on_ready():
@@ -27,7 +30,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith("!horoszkop"):
+    if message.content.startswith("!horoszkop") or message.content.startswith("! horoszkop"):
         if message.channel.id == horoszkop_csatorna:
             try:
                 await message.channel.send(horoscope.fetch(message.content.replace("!horoszkop ", "")))
@@ -36,18 +39,18 @@ async def on_message(message):
         else:
             await rossz_csatorna(message.channel, horoszkop_csatorna)
     
-    elif message.content.startswith("!latex"):
+    elif message.content.startswith("!latex") or message.content.startswith("! latex"):
         try:
             latex.save_image_from_latex(message.content.replace("!latex", ""))
             await message.channel.send(file=discord.File("images/compiled_latex.png"))
         except Exception:
             await message.channel.send("Érvénytelen LaTeX!")
     
-    elif message.content.startswith("!cat"):
+    elif message.content.startswith("!cat") or message.content.startswith("! cat"):
         catto.fetch(message.content.replace("!cat ", ""))
         await message.channel.send(file=discord.File("images/cat.gif"))
     
-    elif message.content == "!rangok":
+    elif message.content in ["!rangok", "! rangok"]:
         if message.channel.id == rangok_csatorna:
             await message.channel.send("Elérhető rangok:")
             await message.channel.send("_ _")
@@ -63,7 +66,7 @@ async def on_message(message):
         else:
             await rossz_csatorna(message.channel, rangok_csatorna)
     
-    elif message.content.startswith("!rang"):
+    elif message.content.startswith("!rang") or message.content.startswith("! rang"):
         if message.channel.id == rangok_csatorna:
             kert_rang = message.content.replace("!rang ", "")
             elerheto_rangok = rangok()
