@@ -1,6 +1,6 @@
 import json
 import discord
-from discord import Intents, app_commands
+# from discord import Intents, app_commands
 import latex
 import horoscope
 import catto
@@ -8,6 +8,7 @@ import catto
 horoszkop_csatorna = 992771006403985429
 rangok_csatorna = 993630780532199536
 
+"""
 MyGuild = discord.Object(id=0)
 class aclient(discord.Client):
     def __init__(self, *, intents: Intents):
@@ -22,9 +23,10 @@ class aclient(discord.Client):
 intents = Intents.all()
 intents.members = True
 intents.message_content = True
+"""
 
-
-client = aclient(intents=intents)
+# client = aclient(intents=intents)
+client = discord.Client()
 token = open("token.txt", "r").read()
 
 async def rossz_csatorna(aktualis_csatorna, jo_csatorna):
@@ -39,9 +41,11 @@ def rangok():
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
+"""
 @client.tree.command()
 async def hello(interaction: discord.Interaction):
     await interaction.response.send_message(f"Hello, {interaction.user.mention}")
+"""
 
 
 @client.event
@@ -65,7 +69,7 @@ async def on_message(message):
         except Exception:
             await message.channel.send("Érvénytelen LaTeX!")
 
-    elif message.content.startswith("!cat") or message.content.starswith("! cat"):
+    elif message.content.startswith("!cat") or message.content.startswith("! cat"):
         catto.fetch(message.content.replace("!cat ", ""))
         await message.channel.send(file=discord.File("images/cat.gif"))
 
