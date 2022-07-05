@@ -8,8 +8,7 @@ import catto
 horoszkop_csatorna = 992771006403985429
 rangok_csatorna = 993630780532199536
 
-CHANNEL_ID = #töltsd ki
-MyGuild = discord.Object(id=0) #töltsd ki
+MyGuild = discord.Object(id=0)
 class aclient(discord.Client):
     def __init__(self, *, intents: Intents):
         super().__init__(intents=intents)
@@ -50,7 +49,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith("!horoszkop"):
+    if message.content.startswith("!horoszkop") or message.content.startswith("! horoszkop"):
         if message.channel.id == horoszkop_csatorna:
             try:
                 await message.channel.send(horoscope.fetch(message.content.replace("!horoszkop ", "")))
@@ -66,11 +65,11 @@ async def on_message(message):
         except Exception:
             await message.channel.send("Érvénytelen LaTeX!")
 
-    elif message.content.startswith("!cat"):
+    elif message.content.startswith("!cat") or message.content.starswith("! cat"):
         catto.fetch(message.content.replace("!cat ", ""))
         await message.channel.send(file=discord.File("images/cat.gif"))
 
-    elif message.content == "!rangok":
+    elif message.content == "!rangok" or message.content == "! rangok":
         if message.channel.id == rangok_csatorna:
             await message.channel.send("Elérhető rangok:")
             await message.channel.send("_ _")
@@ -86,7 +85,7 @@ async def on_message(message):
         else:
             await rossz_csatorna(message.channel, rangok_csatorna)
 
-    elif message.content.startswith("!rang"):
+    elif message.content.startswith("!rang") or message.content.startswith("! rang"):
         if message.channel.id == rangok_csatorna:
             kert_rang = message.content.replace("!rang ", "")
             elerheto_rangok = rangok()
