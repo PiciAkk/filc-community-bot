@@ -3,12 +3,14 @@ import discord
 import latex
 import horoscope
 import catto
+import parse_message
 
 horoszkop_csatorna = 992771006403985429
 rangok_csatorna = 993630780532199536
 
 client = discord.Client()
 token = open("token.txt", "r").read()
+
 
 async def rossz_csatorna(aktualis_csatorna, jo_csatorna):
     await aktualis_csatorna.send(f"Kérlek használd a megfelelő csatornát: <#{jo_csatorna}> :)")
@@ -27,30 +29,32 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == client.user or not message.content.startswith("!"):
         return
 
-    if message.content.startswith("!horoszkop"):
+    elemzett = parse_message.parse_message(message.content)
+
+    if elemzett[0] == "horoszkop":
         if message.channel.id == horoszkop_csatorna:
             try:
-                await message.channel.send(horoscope.fetch(message.content.replace("!horoszkop ", "")))
+                await message.channel.send(horoscope.fetch(elemzett[1]))
             except Exception:
                 await message.channel.send("Nem létező horoszkóp!")
         else:
             await rossz_csatorna(message.channel, horoszkop_csatorna)
     
-    elif message.content.startswith("!latex"):
+    elif elemzett[0] == "latex":
         try:
-            latex.save_image_from_latex(message.content.replace("!latex", ""))
+            latex.save_image_from_latex(elemzett[1])
             await message.channel.send(file=discord.File("images/compiled_latex.png"))
         except Exception:
             await message.channel.send("Érvénytelen LaTeX!")
     
-    elif message.content.startswith("!cat"):
-        catto.fetch(message.content.replace("!cat ", ""))
+    elif elemzett[0] == "cat":
+        catto.fetch(elemzett[1])
         await message.channel.send(file=discord.File("images/cat.gif"))
     
-    elif message.content == "!rangok":
+    elif elemzett[0] == "rangok":
         if message.channel.id == rangok_csatorna:
             await message.channel.send("Elérhető rangok:")
             await message.channel.send("_ _")
@@ -66,9 +70,9 @@ async def on_message(message):
         else:
             await rossz_csatorna(message.channel, rangok_csatorna)
     
-    elif message.content.startswith("!rang"):
+    elif elemzett[0] == "rang":
         if message.channel.id == rangok_csatorna:
-            kert_rang = message.content.replace("!rang ", "")
+            kert_rang = elemzett[1]
             elerheto_rangok = rangok()
 
             if kert_rang in map(lambda rang: rang["role"], elerheto_rangok):
