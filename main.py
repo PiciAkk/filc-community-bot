@@ -1,5 +1,6 @@
 import json
 import discord
+from soupsieve import match
 import latex
 import horoscope
 import catto
@@ -34,52 +35,52 @@ async def on_message(message):
 
     elemzett = parse_message.parse_message(message.content)
 
-    if elemzett[0] == "horoszkop":
-        if message.channel.id == horoszkop_csatorna:
-            try:
-                await message.channel.send(horoscope.fetch(elemzett[1]))
-            except Exception:
-                await message.channel.send("Nem létező horoszkóp!")
-        else:
-            await rossz_csatorna(message.channel, horoszkop_csatorna)
-    
-    elif elemzett[0] == "latex":
-        try:
-            latex.save_image_from_latex(elemzett[1])
-            await message.channel.send(file=discord.File("images/compiled_latex.png"))
-        except Exception:
-            await message.channel.send("Érvénytelen LaTeX!")
-    
-    elif elemzett[0] == "cat":
-        catto.fetch(elemzett[1])
-        await message.channel.send(file=discord.File("images/cat.gif"))
-    
-    elif elemzett[0] == "rangok":
-        if message.channel.id == rangok_csatorna:
-            await message.channel.send("Elérhető rangok:")
-            await message.channel.send("_ _")
-            await message.channel.send("\n\n".join(
-                map(
-                    lambda rang: 
-                    f"Rang: {rang['name']}\n"
-                    f"Leírás: {rang['description']}\n"
-                    f"Parancs: `!rang {rang['role']}`\n",
-                    rangok()
-                )
-            ))
-        else:
-            await rossz_csatorna(message.channel, rangok_csatorna)
-    
-    elif elemzett[0] == "rang":
-        if message.channel.id == rangok_csatorna:
-            kert_rang = elemzett[1]
-            elerheto_rangok = rangok()
+    match elemzett:
+        case ["horoszkop", csillagkep]:            
+            if message.channel.id == horoszkop_csatorna:
+                try:
+                    await message.channel.send(horoscope.fetch(csillagkep))
+                except Exception:
+                    await message.channel.send("Nem létező horoszkóp!")
+            else:
+                await rossz_csatorna(message.channel, horoszkop_csatorna)
 
-            if kert_rang in map(lambda rang: rang["role"], elerheto_rangok):
-                await message.author.add_roles(discord.utils.get(message.guild.roles, name=kert_rang))
-                await message.add_reaction(list(filter(lambda rang: rang["role"] == kert_rang, elerheto_rangok))[0]["emoji"])
-        else:
-            await rossz_csatorna(message.channel, rangok_csatorna)
+        case ["latex", *latex_bemenet]:
+            try:
+                latex.save_image_from_latex(" ".join(kod))
+                await message.channel.send(file=discord.File("images/compiled_latex.png"))
+            except Exception:
+                await message.channel.send("Érvénytelen LaTeX!")
+    
+        case ["cat", kod]:
+            catto.fetch(kod)
+            await message.channel.send(file=discord.File("images/cat.gif"))
+
+        case ["rang"]:
+            if message.channel.id == rangok_csatorna:
+                await message.channel.send("Elérhető rangok:")
+                await message.channel.send("_ _")
+                await message.channel.send("\n\n".join(
+                    map(
+                        lambda rang: 
+                        f"Rang: {rang['name']}\n"
+                        f"Leírás: {rang['description']}\n"
+                        f"Parancs: `!rang {rang['role']}`\n",
+                        rangok()
+                    )
+                ))
+            else:
+                await rossz_csatorna(message.channel, rangok_csatorna)
+
+        case ["rang", kert_rang]:
+            if message.channel.id == rangok_csatorna:
+                elerheto_rangok = rangok()
+
+                if kert_rang in map(lambda rang: rang["role"], elerheto_rangok):
+                    await message.author.add_roles(discord.utils.get(message.guild.roles, name=kert_rang))
+                    await message.add_reaction(list(filter(lambda rang: rang["role"] == kert_rang, elerheto_rangok))[0]["emoji"])
+            else:
+                await rossz_csatorna(message.channel, rangok_csatorna)
             
 
 client.run(token)
