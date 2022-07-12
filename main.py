@@ -1,6 +1,5 @@
 import json
 import discord
-from soupsieve import match
 import latex
 import horoscope
 import catto
@@ -47,7 +46,7 @@ async def on_message(message):
 
         case ["latex", *latex_bemenet]:
             try:
-                latex.save_image_from_latex(" ".join(kod))
+                latex.save_image_from_latex(" ".join(latex_bemenet))
                 await message.channel.send(file=discord.File("images/compiled_latex.png"))
             except Exception:
                 await message.channel.send("Érvénytelen LaTeX!")
@@ -56,16 +55,16 @@ async def on_message(message):
             catto.fetch(kod)
             await message.channel.send(file=discord.File("images/cat.gif"))
 
-        case ["rang"]:
+        case ["rang"|"rangok"]:
             if message.channel.id == rangok_csatorna:
                 await message.channel.send("Elérhető rangok:")
                 await message.channel.send("_ _")
                 await message.channel.send("\n\n".join(
                     map(
                         lambda rang: 
-                        f"Rang: {rang['name']}\n"
-                        f"Leírás: {rang['description']}\n"
-                        f"Parancs: `!rang {rang['role']}`\n",
+                        f"**Rang:** {rang['name']}\n"
+                        f"**Leírás:** {rang['description']}\n"
+                        f"**Parancs:** `!rang {rang['role']}`\n",
                         rangok()
                     )
                 ))
@@ -81,6 +80,9 @@ async def on_message(message):
                     await message.add_reaction(list(filter(lambda rang: rang["role"] == kert_rang, elerheto_rangok))[0]["emoji"])
             else:
                 await rossz_csatorna(message.channel, rangok_csatorna)
+
+        case _:
+            await message.channel.send("Ismeretlen parancs!")
             
 
 client.run(token)
