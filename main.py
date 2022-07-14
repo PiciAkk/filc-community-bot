@@ -1,3 +1,4 @@
+import uwufier
 import json
 import discord
 import latex
@@ -80,6 +81,9 @@ async def on_message(message):
                     await message.add_reaction(list(filter(lambda rang: rang["role"] == kert_rang, elerheto_rangok))[0]["emoji"])
             else:
                 await rossz_csatorna(message.channel, rangok_csatorna)
+
+        case ["uwufy", *szoveg]:
+            await message.channel.send(uwufier.uwufy(" ".join(szoveg)))
 
         case _:
             await message.channel.send("Ismeretlen parancs!")
