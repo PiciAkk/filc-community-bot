@@ -1,12 +1,16 @@
 import requests
-import json
 
 def fetch(catto):
     image = open("images/cat.gif", "wb+")
-    if len(catto) <= 3:
-        image.write(requests.get(f"https://http.cat/{catto}").content)
-    elif len(catto) > 3 and catto == "random":
-        image.write(requests.get(requests.get("https://aws.random.cat/meow").json()["file"]).content)
+
+    if catto.isnumeric() and len(catto) <= 3:
+        url = f"https://http.cat/{catto}"
+
+    elif catto == "random":
+        url = requests.get("https://aws.random.cat/meow").json()["file"]
+
     else:
-        image.write(requests.get(f"https://http.cat/404").content)
+        url = "https://http.cat/404"
+
+    image.write(requests.get(url).content)
     image.close()
