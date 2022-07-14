@@ -13,6 +13,7 @@ client = discord.Client()
 
 token_fajl = open("token.txt", "r")
 token = token_fajl.read()
+
 token_fajl.close()
 
 async def rossz_csatorna(aktualis_csatorna, jo_csatorna):
@@ -60,17 +61,18 @@ async def on_message(message):
 
         case ["rang"|"rangok"]:
             if message.channel.id == rangok_csatorna:
-                await message.channel.send("Elérhető rangok:")
-                await message.channel.send("_ _")
-                await message.channel.send("\n\n".join(
-                    map(
-                        lambda rang: 
-                        f"**Rang:** {rang['name']}\n"
-                        f"**Leírás:** {rang['description']}\n"
-                        f"**Parancs:** `!rang {rang['role']}`\n",
-                        rangok()
+                await message.channel.send(
+                    "Elérhető rangok: \n\n" + 
+                    "\n\n".join(
+                        map(
+                            lambda rang: 
+                            f"**Rang:** {rang['name']}\n"
+                            f"**Leírás:** {rang['description']}\n"
+                            f"**Parancs:** `!rang {rang['role']}`",
+                            rangok()
+                        )
                     )
-                ))
+                )
             else:
                 await rossz_csatorna(message.channel, rangok_csatorna)
 
