@@ -10,8 +10,10 @@ horoszkop_csatorna = 992771006403985429
 rangok_csatorna = 993630780532199536
 
 client = discord.Client()
-token = open("token.txt", "r").read()
 
+token_fajl = open("token.txt", "r")
+token = token_fajl.read()
+token_fajl.close()
 
 async def rossz_csatorna(aktualis_csatorna, jo_csatorna):
     await aktualis_csatorna.send(f"Kérlek használd a megfelelő csatornát: <#{jo_csatorna}> :)")
