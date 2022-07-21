@@ -82,12 +82,18 @@ async def on_message(message):
 
                 if kert_rang in map(lambda rang: rang["role"], elerheto_rangok):
                     await message.author.add_roles(discord.utils.get(message.guild.roles, name=kert_rang))
-                    await message.add_reaction(list(filter(lambda rang: rang["role"] == kert_rang, elerheto_rangok))[0]["emoji"])
+                    await message.add_reaction(list(filter(
+                        lambda rang: rang["role"] == kert_rang, 
+                        elerheto_rangok
+                    ))[0]["emoji"])
             else:
                 await rossz_csatorna(message.channel, rangok_csatorna)
 
         case ["uwufy", *szoveg]:
             await message.channel.send(uwufier.uwufy(" ".join(szoveg)))
+
+        case ["ping"]:
+            await message.channel.send("> Ne írj felesleges, ismétlődő üzeneteket!\n :hammer:")
 
         case _:
             await message.channel.send("Ismeretlen parancs, vagy hibás paraméterek!")
