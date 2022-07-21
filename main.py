@@ -90,7 +90,7 @@ async def on_message(message):
             await message.channel.send(uwufier.uwufy(" ".join(szoveg)))
 
         case _:
-            await message.channel.send("Ismeretlen parancs!")
+            await message.channel.send("Ismeretlen parancs, vagy hibás paraméterek!!")
             
 
 client.run(token)
